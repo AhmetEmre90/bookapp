@@ -40,7 +40,7 @@ public class BookService {
     @Transactional
     public BookListItemResponse saveBook(SaveBookRequest saveBookRequest) {
 
-        Category category = categoryService.getCategory(saveBookRequest.getCategoryId());
+        Category category = categoryService.getCategoryById(saveBookRequest.getCategoryId());
 
         Book book = Book.builder()
                 .title(saveBookRequest.getTitle())
@@ -52,17 +52,17 @@ public class BookService {
                 .category(category)
                 .build();
 
-        Book fromDb = bookRepository.save(book);
+        Book savedBook = bookRepository.save(book);
 
         return BookListItemResponse.builder()
-                .id(fromDb.getId())
-                .title(fromDb.getTitle())
-                .author(fromDb.getAuthor())
-                .publisher(fromDb.getPublisher())
-                .lastPage(fromDb.getLastPage())
-                .totalPage(fromDb.getTotalPage())
-                .bookStatus(fromDb.getBookStatus())
-                .categoryName(fromDb.getCategory().getName())
+                .id(savedBook.getId())
+                .title(savedBook.getTitle())
+                .author(savedBook.getAuthor())
+                .publisher(savedBook.getPublisher())
+                .lastPage(savedBook.getLastPage())
+                .totalPage(savedBook.getTotalPage())
+                .bookStatus(savedBook.getBookStatus())
+                .categoryName(savedBook.getCategory().getName())
                 .build();
     }
 
@@ -71,17 +71,17 @@ public class BookService {
         return bookRepository.findAll(PageRequest.of(page, size))
                 .get()
                 .map(this::convertToBookResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<BookResponse> searchByCategory(CategoryType categoryType) {
 
-        Category category = categoryService.getCategory(categoryType.getValue());
+        Category category = categoryService.getCategoryByCategoryName(categoryType.getValue());
 
         return category.getBooks()
                 .stream()
                 .map(this::convertToBookResponse)
-                .collect(Collectors.toList());
+                .toList();
     }
 
     public List<BookResponse> searchByBookStatus(BookStatus bookStatus) {

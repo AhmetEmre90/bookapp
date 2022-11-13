@@ -15,12 +15,12 @@ public class CategoryService {
         this.categoryRepository = categoryRepository;
     }
 
-    public Category getCategory(String categoryName) {
+    public Category getCategoryByCategoryName(String categoryName) {
         return categoryRepository.findByName(categoryName)
                 .orElseThrow(() -> GenericException.builder().errorCode(ErrorCode.CATEGORY_NOT_FOUND).build());
     }
 
-    public Category getCategory(Long categoryId) {
+    public Category getCategoryById(Long categoryId) {
         return categoryRepository.findById(categoryId)
                 .orElseThrow(() -> GenericException.builder().errorCode(ErrorCode.CATEGORY_NOT_FOUND).build());
     }
